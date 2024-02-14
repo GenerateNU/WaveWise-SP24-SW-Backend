@@ -1,4 +1,4 @@
-name: Zip and Upload to AWS S3
+name: Zip and Update Lambda Function
 
 on:
   push:
@@ -7,10 +7,11 @@ on:
 env:
   AWS_REGION: "us-east-1"
   S3_BUCKET: "wavewise"
+  LAMBDA_FUNCTION_NAME: "wavewise-backend"
 
 jobs:
   deploy:
-    name: Deploy to S3
+    name: Deploy to S3 and Update Lambda Function
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -33,5 +34,8 @@ jobs:
       - name: Upload zip to S3
         run: aws s3 cp wavewise-backend.zip s3://${{ env.S3_BUCKET }}/wavewise-backend.zip
 
-      - name: Cleanup local zip file
-        run: rm wavewise-backend.zip
+      - name: Update Lambda function code
+        run: |
+          aws lambda update-function-code \
+            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+            --zip-file fileb://wavewise-backend.zip
