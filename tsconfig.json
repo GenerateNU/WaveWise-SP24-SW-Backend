@@ -10,6 +10,6 @@
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true
   },
-  "include": ["./**/*.ts", "index.js"],
+  "include": ["./**/*.ts", "index.mjs,"],
   "exclude": ["node_modules", "dist"]
 }
