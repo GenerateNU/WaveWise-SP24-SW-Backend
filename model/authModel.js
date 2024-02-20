@@ -1,16 +1,16 @@
-import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
-import { awsConfig } from "../aws-config";
+const {
+  AuthenticationDetails,
+  CognitoUser,
+} = require("amazon-cognito-identity-js");
+const { awsConfig } = require("../aws-config");
 
 class Admin {
-  email: string;
-  password: string;
-
-  constructor(email: string, password: string) {
+  constructor(email, password) {
     this.email = email;
     this.password = password;
   }
 
-  authenticate(): Promise<any> {
+  authenticate() {
     const authenticationDetails = new AuthenticationDetails({
       Username: this.email,
       Password: this.password,
@@ -36,4 +36,4 @@ class Admin {
   }
 }
 
-export default Admin;
+module.exports = Admin;
