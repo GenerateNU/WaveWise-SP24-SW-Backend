@@ -28,6 +28,14 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: GitHubActionsDeploymentSession
 
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies with Yarn
+        run: yarn install --frozen-lockfile
+
       - name: Zip project directory
         run: zip -r wavewise-backend.zip .
 
