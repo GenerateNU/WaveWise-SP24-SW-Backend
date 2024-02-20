@@ -7,8 +7,8 @@ import serverless from "serverless-http";
 const app = express();
 app.use(express.json());
 
-app.use("/wavewise-backend", adminRoutes);
-app.use("/wavewise-backend", oceanDataRoutes);
+app.use("/", adminRoutes);
+app.use("/", oceanDataRoutes);
 app.use("/", test);
 
 app.get("/wavewise-backend", (req, res) => {
