@@ -25,5 +25,6 @@
     "start:dev": "nodemon --exec ts-node ./server.ts",
     "deploy": "serverless deploy",
     "offline": "serverless offline"
-  }
+  },
+  "type": "module"
 }
