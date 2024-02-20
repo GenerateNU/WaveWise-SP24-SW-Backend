@@ -1,6 +1,6 @@
 const Admin = require("../model/authModel");
 
-const authenticateAdmin = async (req, res) => {
+export const authenticateAdmin = async (req, res) => {
   const { email, password } = req.body;
   const admin = new Admin(email, password);
 
@@ -13,5 +13,3 @@ const authenticateAdmin = async (req, res) => {
       .json({ message: "Authentication failed", error: error.toString() });
   }
 };
-
-module.exports = { authenticateAdmin };

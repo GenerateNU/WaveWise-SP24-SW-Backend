@@ -2,7 +2,7 @@ const OceanData = require("../model/oceanData");
 
 const oceanDataModel = new OceanData();
 
-const addOceanData = async (req, res) => {
+export const addOceanData = async (req, res) => {
   try {
     const result = await oceanDataModel.save(req.body);
     res.json({ message: "Data saved successfully", result });
@@ -14,7 +14,7 @@ const addOceanData = async (req, res) => {
   }
 };
 
-const getOceanData = async (req, res) => {
+export const getOceanData = async (req, res) => {
   try {
     const data = await oceanDataModel.getAll();
     res.json({ message: "Data retrieved successfully", data });
@@ -24,5 +24,3 @@ const getOceanData = async (req, res) => {
       .json({ message: "Failed to retrieve data", error: error.message });
   }
 };
-
-module.exports = { addOceanData, getOceanData };
