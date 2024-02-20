@@ -1,6 +1,6 @@
 import express from "express";
-import adminRoutes from "./routes/routers";
-import oceanDataRoutes from "./routes/routers";
+// import adminRoutes from "./routes/routers";
+// import oceanDataRoutes from "./routes/routers";
 import serverless from "serverless-http";
 
 const app = express();
@@ -10,8 +10,8 @@ app.get("/test", (req, res) => {
   res.json({ message: "Hello from your Lambda function!" });
 });
 
-app.use("/api", adminRoutes);
-app.use("/api", oceanDataRoutes);
+// app.use("/api", adminRoutes);
+// app.use("/api", oceanDataRoutes);
 
 // const PORT = process.env.PORT || 3000;
 // app.listen(PORT, () => {
