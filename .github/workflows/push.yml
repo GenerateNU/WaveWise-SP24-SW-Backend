@@ -31,7 +31,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16" # Ensure this matches the supported Lambda Node.js runtime
+          node-version: " 21.6.2"
 
       - name: Install production dependencies with Yarn
         run: yarn install --frozen-lockfile --production
