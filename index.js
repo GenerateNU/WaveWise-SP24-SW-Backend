@@ -6,7 +6,7 @@ import serverless from "serverless-http";
 const app = express();
 app.use(express.json());
 
-app.get("/test", (req, res) => {
+app.get("/", (req, res) => {
   res.json({ message: "Hello from your Lambda function!" });
 });
 
