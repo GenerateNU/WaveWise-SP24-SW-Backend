@@ -15,11 +15,4 @@
 
 // router.get("/ocean-data", getOceanData);
 
-const express = require("express");
-const router = express.Router();
-
-router.get("/wavewise-backend", (req, res) => {
-  res.json({ message: "Welcome to WaveWise Backend" });
-});
-
-module.exports = router;
+export default router;

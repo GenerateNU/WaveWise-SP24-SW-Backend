@@ -2,28 +2,18 @@
 // // import adminRoutes from "./routes/routers.mjs";
 // // import oceanDataRoutes from "./routes/routers.mjs";
 // import test from "./routes/routers.mjs";
-// import serverless from "serverless-http";
+import serverless from "serverless-http";
 
-// const app = express();
-// app.use(express.json());
+const app = express();
+app.use(express.json());
 
 // // app.use("/wavewise-backend", adminRoutes);
 // // app.use("/wavewise-backend", oceanDataRoutes);
 
 // app.use("/", test);
 
-// // app.get("/wavewise-backend", (req, res) => {
-// //   res.json({ message: "Welcome to WaveWise Backend" });
-// // });
+app.get("/wavewise-backend", (req, res) => {
+  res.json({ message: "Welcome to WaveWise Backend" });
+});
 
-// export const handler = serverless(app);
-
-const express = require("express");
-const serverless = require("serverless-http");
-const router = require("./routes/routers");
-
-const app = express();
-app.use(express.json());
-app.use("/", router);
-
-exports.handler = serverless(app);
+export const handler = serverless(app);
