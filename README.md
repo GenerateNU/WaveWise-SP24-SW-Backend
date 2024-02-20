@@ -1,1 +1,1 @@
-Wavewise-Backend
+WaveWise-Backend
