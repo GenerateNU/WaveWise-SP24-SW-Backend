@@ -21,7 +21,7 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "start:dev": "nodemon --exec ts-node ./server.ts",
+    "start:dev": "nodemon --exec ts-node ./index.ts",
     "deploy": "serverless deploy",
     "offline": "serverless offline"
   },
