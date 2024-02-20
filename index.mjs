@@ -1,9 +1,8 @@
-// import express from "express";
+import express from "express";
 // // import adminRoutes from "./routes/routers.mjs";
 // // import oceanDataRoutes from "./routes/routers.mjs";
 // import test from "./routes/routers.mjs";
 import serverless from "serverless-http";
-
 const app = express();
 app.use(express.json());
 
