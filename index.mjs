@@ -6,7 +6,7 @@ import serverless from "serverless-http";
 const app = express();
 app.use(express.json());
 
-app.use("/api", adminRoutes);
-app.use("/api", oceanDataRoutes);
+app.use("/wavewise-backend/api", adminRoutes);
+app.use("/wavewise-backend/api", oceanDataRoutes);
 
 export const handler = serverless(app);
