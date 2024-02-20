@@ -2,15 +2,15 @@ import { dynamoDB } from "../aws-config";
 import AWS from "aws-sdk";
 
 interface OceanDataAttributes {
-  id: string;
+  DeviceID: string; // Partition key
+  Timestamp: string; // Sort key
   salinity: number;
   uv: number;
   temperature: number;
 }
 
 class OceanData {
-  private tableName: string = "OceanDataTable";
-
+  private tableName: string = "OceanData";
   async save(
     oceanData: OceanDataAttributes
   ): Promise<AWS.DynamoDB.DocumentClient.PutItemOutput> {
@@ -28,6 +28,33 @@ class OceanData {
     };
 
     return dynamoDB.scan(params).promise();
+  }
+
+  // Example query method based on DeviceID and optional time range
+  async getByDeviceID(
+    deviceID: string,
+    startTimestamp?: string,
+    endTimestamp?: string
+  ): Promise<AWS.DynamoDB.DocumentClient.QueryOutput> {
+    const params: AWS.DynamoDB.DocumentClient.QueryInput = {
+      TableName: this.tableName,
+      KeyConditionExpression:
+        "#DeviceID = :deviceID" +
+        (startTimestamp && endTimestamp
+          ? " AND #Timestamp BETWEEN :start AND :end"
+          : ""),
+      ExpressionAttributeNames: {
+        "#DeviceID": "DeviceID",
+        "#Timestamp": "Timestamp",
+      },
+      ExpressionAttributeValues: {
+        ":deviceID": deviceID,
+        ...(startTimestamp &&
+          endTimestamp && { ":start": startTimestamp, ":end": endTimestamp }),
+      },
+    };
+
+    return dynamoDB.query(params).promise();
   }
 }
 
