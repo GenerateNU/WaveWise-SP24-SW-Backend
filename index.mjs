@@ -18,13 +18,12 @@
 
 // export const handler = serverless(app);
 
-import express from "express";
-import serverless from "serverless-http";
-import router from "./routes/routers.mjs";
+const express = require("express");
+const serverless = require("serverless-http");
+const router = require("./routes/routers");
 
 const app = express();
 app.use(express.json());
-
 app.use("/", router);
 
-export const handler = serverless(app);
+exports.handler = serverless(app);
