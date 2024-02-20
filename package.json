@@ -1,7 +1,7 @@
 {
   "name": "WaveWise-SP24-SW-Backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.mjs",
   "repository": "git@github.com:GenerateNU/WaveWise-SP24-SW-Backend.git",
   "author": "Satya Sowri Sampath Korturti <98078922+Sowri19@users.noreply.github.com>",
   "license": "MIT",
