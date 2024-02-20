@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: "us-east-1"
-  S3_BUCKET: "wavewise-backend"
+  S3_BUCKET: "wavewise"
   LAMBDA_FUNCTION_NAME: "wavewise-backend"
 
 jobs:
