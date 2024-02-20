@@ -6,6 +6,10 @@ import serverless from "serverless-http";
 const app = express();
 app.use(express.json());
 
+app.get("/test", (req, res) => {
+  res.json({ message: "Hello from your Lambda function!" });
+});
+
 app.use("/api", adminRoutes);
 app.use("/api", oceanDataRoutes);
 
