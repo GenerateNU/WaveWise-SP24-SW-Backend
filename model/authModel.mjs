@@ -2,7 +2,7 @@ const {
   AuthenticationDetails,
   CognitoUser,
 } = require("amazon-cognito-identity-js");
-const { awsConfig } = require("../aws-config");
+const { awsConfig } = require("../aws-config.mjs");
 
 class Admin {
   constructor(email, password) {

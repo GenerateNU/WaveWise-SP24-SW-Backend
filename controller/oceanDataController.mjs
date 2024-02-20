@@ -1,4 +1,4 @@
-const OceanData = require("../model/oceanData");
+const OceanData = require("../model/oceanData.mjs");
 
 const oceanDataModel = new OceanData();
 

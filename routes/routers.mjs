@@ -1,8 +1,11 @@
 // routes/adminRoutes.ts
 
 import express from "express";
-import { authenticateAdmin } from "../controller/authController";
-import { addOceanData, getOceanData } from "../controller/oceanDataController";
+import { authenticateAdmin } from "../controller/authController.mjs";
+import {
+  addOceanData,
+  getOceanData,
+} from "../controller/oceanDataController.mjs";
 
 const router = express.Router();
 
