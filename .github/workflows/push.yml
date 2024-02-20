@@ -40,10 +40,11 @@ jobs:
         run: zip -r wavewise-backend.zip .
 
       - name: Upload zip to S3
-        run: aws s3 cp wavewise-backend.zip s3://${{ env.S3_BUCKET }}/wavewise-backend.zip
+        run: aws s3 cp wavewise-backend.zip s3://${{ env.S3_BUCKET }}/${{ env.LAMBDA_FUNCTION_NAME }}.zip
 
-      - name: Update Lambda function code
+      - name: Update Lambda function code from S3
         run: |
           aws lambda update-function-code \
             --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
-            --zip-file fileb://wavewise-backend.zip
+            --s3-bucket ${{ env.S3_BUCKET }} \
+            --s3-key ${{ env.LAMBDA_FUNCTION_NAME }}.zip
