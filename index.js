@@ -6,7 +6,7 @@ import serverless from "serverless-http";
 const app = express();
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/wavewise-backend", (req, res) => {
   res.json({ message: "Hello from your Lambda function!" });
 });
 
