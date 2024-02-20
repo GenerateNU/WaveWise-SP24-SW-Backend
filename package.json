@@ -1,7 +1,13 @@
 {
   "name": "WaveWise-SP24-SW-Backend",
   "version": "1.0.0",
-  "main": "index.mjs",
+  "description": "AWS Lambda backend for the WaveWise project",
+  "scripts": {
+    "build": "tsc",
+    "start:dev": "ts-node server.ts",
+    "deploy": "npm run build && serverless deploy",
+    "offline": "serverless offline"
+  },
   "repository": "git@github.com:GenerateNU/WaveWise-SP24-SW-Backend.git",
   "author": "Satya Sowri Sampath Korturti <98078922+Sowri19@users.noreply.github.com>",
   "license": "MIT",
@@ -15,16 +21,13 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.96",
     "@types/aws-sdk": "^2.7.0",
     "@types/node": "^20.11.17",
     "nodemon": "^3.0.3",
     "serverless": "^3.38.0",
-    "ts-node": "^10.9.2"
-  },
-  "scripts": {
-    "start:dev": "nodemon --exec ts-node ./server.ts",
-    "deploy": "serverless deploy",
-    "offline": "serverless offline"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "type": "module"
 }
