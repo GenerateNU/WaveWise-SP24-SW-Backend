@@ -34,7 +34,7 @@ jobs:
           node-version: " 21.6.2"
 
       - name: Install production dependencies with Yarn
-        run: yarn install --production
+        run: yarn install
 
       - name: Zip project directory excluding development files
         run: zip -r wavewise-backend.zip . -x "*.git*" "*tests*" "*docs*"
