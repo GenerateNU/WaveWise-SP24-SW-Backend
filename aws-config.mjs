@@ -13,10 +13,10 @@ import AWS from "aws-sdk";
 //   userPool,
 // };
 
-AWS.config.update({
-  region: awsConfig.region,
-});
+// AWS.config.update({
+//   region: awsConfig.region,
+// });
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-export { awsConfig, dynamoDB };
+export { dynamoDB };
