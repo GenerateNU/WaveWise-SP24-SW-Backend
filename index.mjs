@@ -1,6 +1,6 @@
 // index.mjs
 import express from "express";
-import router from "./routes/routers.mjs";
+// import router from "./routes/routers.mjs";
 import serverless from "serverless-http";
 
 const app = express();
