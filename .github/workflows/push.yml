@@ -31,13 +31,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "21.x" # Using a valid LTS version of Node.js
+          node-version: "21.x" # Specify a Node.js version compatible with AWS Lambda
 
       - name: Install production dependencies with Yarn
         run: yarn install --frozen-lockfile --production
 
       - name: Zip project directory excluding development files
-        run: zip -r wavewise-backend.zip . -x "*.git*" "*tests*" "*docs*"
+        run: zip -r wavewise-backend.zip . -x "*.git*" "*node_modules*" "*tests*" "*docs*"
 
       - name: Upload zip to S3
         run: aws s3 cp wavewise-backend.zip s3://${{ env.S3_BUCKET }}/${{ env.LAMBDA_FUNCTION_NAME }}.zip
