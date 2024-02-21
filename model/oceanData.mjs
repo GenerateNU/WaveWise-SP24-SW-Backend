@@ -1,6 +1,4 @@
-const AWS = require("aws-sdk");
-// Assuming aws-config.js exports an initialized AWS.DynamoDB.DocumentClient instance
-const dynamoDB = require("../aws-config.mjs").dynamoDB;
+import { dynamoDB } from "../aws-config.mjs";
 
 class OceanData {
   constructor() {
@@ -48,4 +46,4 @@ class OceanData {
   }
 }
 
-module.exports = OceanData;
+export default OceanData;

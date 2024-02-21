@@ -1,5 +1,5 @@
-const AmazonCognitoIdentity = require("amazon-cognito-identity-js");
-const AWS = require("aws-sdk");
+import AmazonCognitoIdentity from "amazon-cognito-identity-js";
+import AWS from "aws-sdk";
 
 const poolData = {
   UserPoolId: "<YourUserPoolId>",
@@ -19,4 +19,4 @@ AWS.config.update({
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-module.exports = { awsConfig, dynamoDB };
+export { awsConfig, dynamoDB };

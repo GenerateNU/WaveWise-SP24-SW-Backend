@@ -1,4 +1,3 @@
-// Import the necessary modules using ES Module syntax
 import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import { awsConfig } from "../aws-config.mjs";
 

@@ -1,4 +1,4 @@
-const Admin = require("../model/authModel.mjs");
+import Admin from "../model/authModel.mjs";
 
 export const authenticateAdmin = async (req, res) => {
   const { email, password } = req.body;
