@@ -1,7 +1,8 @@
+// authModel.mjs
 import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import { awsConfig } from "../aws-config.mjs";
 
-export class Admin {
+class Admin {
   constructor(email, password) {
     this.email = email;
     this.password = password;
@@ -32,3 +33,5 @@ export class Admin {
     });
   }
 }
+
+export default Admin;
