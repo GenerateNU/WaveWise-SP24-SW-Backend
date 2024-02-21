@@ -37,7 +37,7 @@ jobs:
         run: yarn install --frozen-lockfile --production
 
       - name: Zip project directory excluding development files
-        run: zip -r wavewise-backend.zip . -x "*.git*" "*tests*"
+        run: zip -r wavewise-backend.zip . -x "*.git*"
 
       - name: Upload zip to S3
         run: aws s3 cp wavewise-backend.zip s3://${{ env.S3_BUCKET }}/${{ env.LAMBDA_FUNCTION_NAME }}.zip
