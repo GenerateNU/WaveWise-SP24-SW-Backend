@@ -16,4 +16,8 @@ router.get("/wavewise-backend", (req, res) => {
   res.json({ message: "Welcome to WaveWise Backend" });
 });
 
+router.get("/", (req, res) => {
+  res.json({ message: "Welcome to WaveWise Backend" });
+});
+
 export default router;
