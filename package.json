@@ -5,20 +5,15 @@
   "author": "Satya Sowri Sampath Korturti <98078922+Sowri19@users.noreply.github.com>",
   "license": "MIT",
   "dependencies": {
-    "@types/express": "^4.17.21",
     "amazon-cognito-identity-js": "^6.3.7",
     "aws-sdk": "^2.x.x",
     "express": "^4.18.2",
-    "global": "^4.4.0",
-    "serverless-http": "^3.2.0",
-    "typescript": "^5.3.3"
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",
     "@types/node": "^20.11.17",
-    "nodemon": "^3.0.3",
-    "serverless": "^3.38.0",
-    "ts-node": "^10.9.2"
+    "serverless": "^3.38.0"
   },
   "scripts": {
     "start:dev": "nodemon --exec ts-node ./index.ts",
