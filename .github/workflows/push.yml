@@ -31,13 +31,16 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: " 21.6.2"
+          node-version: "14" # Use a version that matches your Lambda's runtime
 
       - name: Install production dependencies with Yarn
-        run: yarn install
+        run: yarn install --production # Install only production dependencies to reduce size
 
-      - name: Zip project directory excluding development files
-        run: zip -r wavewise-backend.zip . -x "*.git*" "*tests*" "*docs*"
+      - name: Prune development dependencies
+        run: yarn install --production # Ensure only production dependencies are included
+
+      - name: Zip project directory excluding unnecessary files
+        run: zip -r wavewise-backend.zip . -x "*.git*" "*node_modules/dev-dependencies*" "*tests*" "*docs*"
 
       - name: Upload zip to S3
         run: aws s3 cp wavewise-backend.zip s3://${{ env.S3_BUCKET }}/${{ env.LAMBDA_FUNCTION_NAME }}.zip
