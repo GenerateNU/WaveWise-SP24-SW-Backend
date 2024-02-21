@@ -8,4 +8,8 @@ app.use(express.json());
 
 app.use("/", router);
 
+app.get("/wavewise-backend", (req, res) => {
+  res.json({ message: "Welcome to WaveWise Backend" });
+});
+
 export const handler = serverless(app);
