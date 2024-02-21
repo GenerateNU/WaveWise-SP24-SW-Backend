@@ -31,13 +31,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: " 21.6.2"
+          node-version: "16"
 
       - name: Install production dependencies with Yarn
         run: yarn install --frozen-lockfile --production
 
       - name: Zip project directory excluding development files
-        run: zip -r wavewise-backend.zip . -x "*.git*"
+        run: zip -r wavewise-backend.zip . -x "*.git*" -x "*node_modules*" -x "*tests*"
 
       - name: Upload zip to S3
         run: aws s3 cp wavewise-backend.zip s3://${{ env.S3_BUCKET }}/${{ env.LAMBDA_FUNCTION_NAME }}.zip
