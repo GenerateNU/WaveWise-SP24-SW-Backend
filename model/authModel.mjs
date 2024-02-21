@@ -1,10 +1,8 @@
-const {
-  AuthenticationDetails,
-  CognitoUser,
-} = require("amazon-cognito-identity-js");
-const { awsConfig } = require("../aws-config.mjs");
+// Import the necessary modules using ES Module syntax
+import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
+import { awsConfig } from "../aws-config.mjs";
 
-class Admin {
+export class Admin {
   constructor(email, password) {
     this.email = email;
     this.password = password;
@@ -35,5 +33,3 @@ class Admin {
     });
   }
 }
-
-module.exports = Admin;
