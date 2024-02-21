@@ -11,7 +11,8 @@ const router = express.Router();
 router.post("/admin/authenticate", authenticateAdmin);
 router.post("/ocean-data", addOceanData);
 router.get("/ocean-data", getOceanData);
-router.get("/", (req, res) => {
+
+router.get("/wavewise-backend", (req, res) => {
   res.json({ message: "Welcome to WaveWise Backend" });
 });
 
