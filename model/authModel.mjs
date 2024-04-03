@@ -1,37 +1,127 @@
-// // authModel.mjs
-// import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
-// import { awsConfig } from "../aws-config.mjs";
+// authModel.js
+import {
+  AuthenticationDetails,
+  CognitoUser,
+  CognitoUserAttribute,
+} from "amazon-cognito-identity-js";
 
-// class Admin {
-//   constructor(email, password) {
-//     this.email = email;
-//     this.password = password;
-//   }
+import { userPool } from "../aws-config.mjs";
 
-//   authenticate() {
-//     const authenticationDetails = new AuthenticationDetails({
-//       Username: this.email,
-//       Password: this.password,
-//     });
+class User {
+  constructor(email, password) {
+    this.email = email;
+    this.password = password;
+    this.cognitoUser = new CognitoUser({
+      Username: this.email,
+      Pool: userPool,
+    });
+  }
 
-//     const userData = {
-//       Username: this.email,
-//       Pool: awsConfig.userPool,
-//     };
+  signup() {
+    const attributeList = [
+      new CognitoUserAttribute({
+        Name: "email",
+        Value: this.email,
+      }),
+    ];
 
-//     const cognitoUser = new CognitoUser(userData);
+    return new Promise((resolve, reject) => {
+      userPool.signUp(
+        this.email,
+        this.password,
+        attributeList,
+        null,
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            // The user has been successfully signed up but is not confirmed yet
+            resolve(result.user);
+          }
+        }
+      );
+    });
+  }
 
-//     return new Promise((resolve, reject) => {
-//       cognitoUser.authenticateUser(authenticationDetails, {
-//         onSuccess: (result) => {
-//           resolve(result);
-//         },
-//         onFailure: (err) => {
-//           reject(err);
-//         },
-//       });
-//     });
-//   }
-// }
+  confirmSignup(verificationCode) {
+    return new Promise((resolve, reject) => {
+      this.cognitoUser.confirmRegistration(
+        verificationCode,
+        true,
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            // The user is now confirmed
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
 
-// export default Admin;
+  authenticate() {
+    const authenticationDetails = new AuthenticationDetails({
+      Username: this.email,
+      Password: this.password,
+    });
+
+    return new Promise((resolve, reject) => {
+      this.cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: (session) => {
+          // The session parameter has the session tokens
+          const tokens = {
+            accessToken: session.getAccessToken().getJwtToken(),
+            idToken: session.getIdToken().getJwtToken(),
+            refreshToken: session.getRefreshToken().getToken(),
+          };
+          resolve(tokens);
+        },
+        onFailure: (err) => {
+          reject(err);
+        },
+      });
+    });
+  }
+
+  changePassword(oldPassword, newPassword) {
+    return new Promise((resolve, reject) => {
+      this.cognitoUser.changePassword(
+        oldPassword,
+        newPassword,
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
+
+  updateEmail(newEmail) {
+    const attributes = [
+      {
+        Name: "email",
+        Value: newEmail,
+      },
+    ];
+
+    return new Promise((resolve, reject) => {
+      this.cognitoUser.updateAttributes(attributes, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
+
+  logout() {
+    this.cognitoUser.signOut();
+  }
+}
+
+export default User;

@@ -1,22 +1,14 @@
-// import AmazonCognitoIdentity from "amazon-cognito-identity-js";
 import AWS from "aws-sdk";
+import { CognitoUserPool } from "amazon-cognito-identity-js";
 
-// const poolData = {
-//   UserPoolId: "<YourUserPoolId>",
-//   ClientId: "<YourClientId>",
-// };
+AWS.config.update({ region: "us-east-1" });
 
-// const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+const poolData = {
+  UserPoolId: "us-east-1_dWwLpMDfP",
+  ClientId: "3t7h8hf0l026ciaa9i2dbbvi1d",
+};
 
-// const awsConfig = {
-//   region: "<YourRegion>",
-//   userPool,
-// };
-
-// AWS.config.update({
-//   region: awsConfig.region,
-// });
-
+const userPool = new CognitoUserPool(poolData);
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-export { dynamoDB };
+export { userPool, dynamoDB, AWS };
