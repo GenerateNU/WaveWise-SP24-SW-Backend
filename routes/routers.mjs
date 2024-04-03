@@ -2,7 +2,7 @@ import express from "express";
 import {
   addOceanData,
   getOceanData,
-} from "../controller/oceanDataController.js";
+} from "../controller/oceanDataController.mjs";
 import {
   signup,
   confirmSignup,
@@ -10,7 +10,7 @@ import {
   changePassword,
   updateEmail,
   logout,
-} from "../controller/authController.js";
+} from "../controller/authController.mjs";
 
 const router = express.Router();
 
