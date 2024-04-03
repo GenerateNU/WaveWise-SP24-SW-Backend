@@ -14,8 +14,8 @@ import {
 
 const router = express.Router();
 
-router.post("/", addOceanData);
-router.get("/", getOceanData);
+router.post("/ocean-data", addOceanData);
+router.get("/ocean-data", getOceanData);
 
 router.post("/signup", signup);
 router.post("/confirm-signup", confirmSignup);

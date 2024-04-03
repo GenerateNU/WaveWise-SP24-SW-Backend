@@ -6,8 +6,7 @@ import serverless from "serverless-http";
 const app = express();
 app.use(express.json());
 
-app.use("/ocean-data", router);
-app.use("/auth", router);
+app.use("/", router);
 
 export const handler = serverless(app);
 
