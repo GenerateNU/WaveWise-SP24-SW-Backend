@@ -6,10 +6,6 @@ import serverless from "serverless-http";
 const app = express();
 app.use(express.json());
 
-app.get("/wavewise-backend", (req, res) => {
-  res.json({ message: "Welcome to WaveWise Backend" });
-});
-
 app.use("/wavewise-backend/auth", router);
 app.use("/wavewise-backend", router);
 
