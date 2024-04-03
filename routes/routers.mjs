@@ -27,7 +27,7 @@ router.post("/auth/update-email", updateEmail);
 router.post("/auth/logout", logout);
 
 router.get("/", (req, res) => {
-  res.json({ message: "Welcome to WaveWise Backend" });
+  res.json({ message: "Welcome to WaveWise testing" });
 });
 
 router.get("/auth", (req, res) => {
