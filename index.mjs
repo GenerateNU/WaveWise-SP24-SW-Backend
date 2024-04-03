@@ -8,6 +8,10 @@ app.use(express.json());
 
 app.use("/wavewise-backend", router);
 
+app.get("/wavewise-backend", (req, res) => {
+  res.send("Hello from the backend");
+});
+
 export const handler = serverless(app);
 
 // const PORT = process.env.PORT || 3000;
