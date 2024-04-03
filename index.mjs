@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use("/", router);
 
-export const handler = serverless(app);
+// export const handler = serverless(app);
 
 // const PORT = process.env.PORT || 3000;
 // app.listen(PORT, () => {
