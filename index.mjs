@@ -7,6 +7,7 @@ app.use(express.json());
 
 // Define a catch-all route to handle all incoming requests
 app.use((req, res) => {
+  console.log("Incoming request:", req.method, req.path);
   router(req, res);
 });
 
