@@ -1,16 +1,13 @@
-// index.mjs
 import express from "express";
-import router from "./routes/routers.mjs";
 import serverless from "serverless-http";
+import router from "./routes/routers.mjs";
 
 const app = express();
 app.use(express.json());
 
-app.use("/", router);
+// Define a catch-all route to handle all incoming requests
+app.use((req, res) => {
+  router(req, res);
+});
 
 export const handler = serverless(app);
-
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log(`Server listening on port ${PORT}`);
-// });
