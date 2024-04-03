@@ -19,7 +19,7 @@ app.use(express.json());
 // Ocean Data routes
 app.post("/ocean-data", addOceanData);
 
-app.get("/wavewise-backend/ocean-data/", (req, res) => {
+app.get("/ocean/", (req, res) => {
   res.send("Hello from ocean!");
 });
 
