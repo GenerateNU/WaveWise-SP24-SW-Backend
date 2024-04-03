@@ -1,14 +1,16 @@
+// index.mjs
 import express from "express";
-import serverless from "serverless-http";
 import router from "./routes/routers.mjs";
+import serverless from "serverless-http";
 
 const app = express();
 app.use(express.json());
 
-// Define a catch-all route to handle all incoming requests
-app.use((req, res) => {
-  console.log("Incoming request:", req.method, req.path);
-  router(req, res);
-});
+app.use("/wavewise-backend", router);
 
 export const handler = serverless(app);
+
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`Server listening on port ${PORT}`);
+// });
