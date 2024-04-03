@@ -17,8 +17,8 @@ const app = express();
 app.use(express.json());
 
 // Ocean Data routes
-app.post("/wavewise-backend/ocean-data", addOceanData);
-app.get("/wavewise-backend/ocean-data", getOceanData);
+app.post("/ocean-data", addOceanData);
+app.get("/ocean-data", getOceanData);
 
 // Authentication routes
 app.post("/wavewise-backend/auth/signup", signup);
