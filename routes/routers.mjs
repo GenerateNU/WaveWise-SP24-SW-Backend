@@ -14,20 +14,14 @@ import {
 
 const router = express.Router();
 
-// Ocean Data routes
-router.post("/ocean-data", addOceanData);
-router.get("/ocean-data", getOceanData);
+router.post("/", addOceanData);
+router.get("/", getOceanData);
 
-// Authentication routes
-router.post("/auth/signup", signup);
-router.post("/auth/confirm-signup", confirmSignup);
-router.post("/auth/login", login);
-router.post("/auth/change-password", changePassword);
-router.post("/auth/update-email", updateEmail);
-router.post("/auth/logout", logout);
-
-router.get("/", (req, res) => {
-  res.json({ message: "Welcome to WaveWise Backend" });
-});
+router.post("/signup", signup);
+router.post("/confirm-signup", confirmSignup);
+router.post("/login", login);
+router.post("/change-password", changePassword);
+router.post("/update-email", updateEmail);
+router.post("/logout", logout);
 
 export default router;
