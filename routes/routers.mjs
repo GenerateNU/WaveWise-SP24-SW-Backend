@@ -13,9 +13,7 @@ import {
 } from "../controller/authController.mjs";
 
 const router = express.Router();
-router.get("/", (req, res) => {
-  res.send("Hello from the root path!");
-});
+
 // Ocean Data routes
 router.route("/ocean-data").post(addOceanData).get(getOceanData);
 
@@ -27,4 +25,11 @@ router.route("/auth/change-password").post(changePassword);
 router.route("/auth/update-email").post(updateEmail);
 router.route("/auth/logout").post(logout);
 
-export default router;
+// Define a catch-all route to handle 404 Not Found
+router.use((req, res) => {
+  res.status(404).json({ error: "Not Found" });
+});
+
+export default (req, res) => {
+  router(req, res, () => {});
+};
