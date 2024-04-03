@@ -11,21 +11,21 @@ import {
   updateEmail,
   logout,
 } from "./controller/authController.mjs";
-import serverless from "serverless-http";
 
 const app = express();
 app.use(express.json());
 
 // Ocean Data routes
-app.route("/wavewise-backend/ocean-data").post(addOceanData).get(getOceanData);
+app.post("/wavewise-backend/ocean-data", addOceanData);
+app.get("/wavewise-backend/ocean-data", getOceanData);
 
 // Authentication routes
-app.route("/wavewise-backend/auth/signup").post(signup);
-app.route("/wavewise-backend/auth/confirm-signup").post(confirmSignup);
-app.route("/wavewise-backend/auth/login").post(login);
-app.route("/wavewise-backend/auth/change-password").post(changePassword);
-app.route("/wavewise-backend/auth/update-email").post(updateEmail);
-app.route("/wavewise-backend/auth/logout").post(logout);
+app.post("/wavewise-backend/auth/signup", signup);
+app.post("/wavewise-backend/auth/confirm-signup", confirmSignup);
+app.post("/wavewise-backend/auth/login", login);
+app.post("/wavewise-backend/auth/change-password", changePassword);
+app.post("/wavewise-backend/auth/update-email", updateEmail);
+app.post("/wavewise-backend/auth/logout", logout);
 
 app.get("/wavewise-backend/", (req, res) => {
   res.send("Hello from Express!");
