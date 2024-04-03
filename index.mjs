@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use("/wavewise-backend", router);
 
-app.get("/wavewise-backend", (req, res) => {
+app.get("/wavewise", (req, res) => {
   res.send("Hello from the backend");
 });
 
