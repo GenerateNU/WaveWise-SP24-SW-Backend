@@ -13,7 +13,9 @@ import {
 } from "../controller/authController.mjs";
 
 const router = express.Router();
-
+router.get("/", (req, res) => {
+  res.send("Hello from the root path!");
+});
 // Ocean Data routes
 router.route("/ocean-data").post(addOceanData).get(getOceanData);
 
