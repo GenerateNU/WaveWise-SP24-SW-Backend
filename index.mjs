@@ -1,4 +1,5 @@
 import express from "express";
+import serverless from "serverless-http"; // Import serverless-http
 import {
   addOceanData,
   getOceanData,
