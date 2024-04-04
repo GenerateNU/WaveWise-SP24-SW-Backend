@@ -20,8 +20,9 @@ export const signup = async (req, res) => {
   }
 };
 
-export const confirmSignup = async (req, res) => {
-  const { email, verificationCode, password } = req.body; // Include password in the request body
+export const confirmSignup = async (event, context) => {
+  // Parse the body from the event
+  const { email, verificationCode, password } = JSON.parse(event.body);
   const user = new User(email, password); // Create a new User instance with the password
 
   try {
@@ -31,30 +32,43 @@ export const confirmSignup = async (req, res) => {
     // After confirmation, authenticate the user to log them in
     const tokens = await user.authenticate();
 
-    // Set the session token as a cookie
-    res.setHeader(
-      "Set-Cookie",
-      cookie.serialize("token", tokens.idToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 30 * 24 * 60 * 60, // 30 days
-      })
-    );
+    // Serialize the cookie
+    const serializedCookie = cookie.serialize("token", tokens.idToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+    });
 
-    res.json({
-      success: true,
-      message: "Signup confirmed and user logged in",
-      tokens,
-    });
+    // Return the response with the Set-Cookie header
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Set-Cookie": serializedCookie,
+      },
+      body: JSON.stringify({
+        success: true,
+        message: "Signup confirmed and user logged in",
+        tokens,
+      }),
+    };
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to confirm signup",
-      error: error.message,
-    });
+    // Return the error response
+    return {
+      statusCode: 400,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to confirm signup",
+        error: error.message,
+      }),
+    };
   }
 };
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = new User(email, password);
