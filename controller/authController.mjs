@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
       .json({ success: false, message: "Signup failed", error: error.message });
   }
 };
-
+// Your route handler
 export const confirmSignup = async (req, res) => {
   const { email, verificationCode, password } = req.body;
   const user = new User(email, password);
@@ -27,13 +27,13 @@ export const confirmSignup = async (req, res) => {
     await user.confirmSignup(verificationCode);
     const tokens = await user.authenticate();
 
-    // Serialize the token into a cookie string manually
-    const tokenCookie = `token=${tokens.idToken}; Path=/; Max-Age=${
-      30 * 24 * 60 * 60
-    }; HttpOnly; Secure`;
-
-    // Set the cookie header in the response
-    res.setHeader("Set-Cookie", tokenCookie);
+    // Set the cookie using res.cookie()
+    res.cookie("token", tokens.idToken, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+    });
 
     // Send the success response
     res.status(200).json({
