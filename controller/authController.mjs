@@ -30,7 +30,6 @@ export const confirmSignup = async (req, res) => {
 
     const serializedCookie = cookie.serialize("token", tokens.idToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
       path: "/",
       maxAge: 30 * 24 * 60 * 60, // 30 days
     });
