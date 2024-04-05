@@ -1,6 +1,5 @@
 // authController.js
 import User from "../model/authModel.mjs";
-import cookie from "cookie";
 
 export const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -28,19 +27,22 @@ export const confirmSignup = async (req, res) => {
     await user.confirmSignup(verificationCode);
     const tokens = await user.authenticate();
 
-    const serializedCookie = cookie.serialize("token", tokens.idToken, {
-      httpOnly: true,
-      path: "/",
-      maxAge: 30 * 24 * 60 * 60, // 30 days
-    });
+    // Serialize the token into a cookie string manually
+    const tokenCookie = `token=${tokens.idToken}; Path=/; Max-Age=${
+      30 * 24 * 60 * 60
+    }; HttpOnly; Secure`;
 
-    res.setHeader("Set-Cookie", serializedCookie);
+    // Set the cookie header in the response
+    res.setHeader("Set-Cookie", tokenCookie);
+
+    // Send the success response
     res.status(200).json({
       success: true,
       message: "Signup confirmed and user logged in",
       tokens,
     });
   } catch (error) {
+    // Send the error response
     res.status(400).json({
       success: false,
       message: "Failed to confirm signup",
