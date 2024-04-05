@@ -1,6 +1,6 @@
 // authController.js
 import User from "../model/authModel.mjs";
-import cookie from "cookie"; // Make sure to install the 'cookie' package
+import cookie from "cookie";
 
 export const signup = async (req, res) => {
   const { email, password } = req.body;
