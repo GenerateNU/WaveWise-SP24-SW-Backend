@@ -20,6 +20,36 @@ export const signup = async (req, res) => {
   }
 };
 
+export const confirmSignup = async (req, res) => {
+  const { email, verificationCode, password } = req.body;
+  const user = new User(email, password);
+
+  try {
+    await user.confirmSignup(verificationCode);
+    const tokens = await user.authenticate();
+
+    const serializedCookie = cookie.serialize("token", tokens.idToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+    });
+
+    res.setHeader("Set-Cookie", serializedCookie);
+    res.status(200).json({
+      success: true,
+      message: "Signup confirmed and user logged in",
+      tokens,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Failed to confirm signup",
+      error: error.message,
+    });
+  }
+};
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = new User(email, password);
