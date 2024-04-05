@@ -20,38 +20,27 @@ export const signup = async (req, res) => {
   }
 };
 export const confirmSignup = async (req, res) => {
-  // Destructure the email, verificationCode, and password from the request body
   const { email, verificationCode, password } = req.body;
-
-  // Create a new User instance with the provided email and password
   const user = new User(email, password);
 
   try {
-    // Confirm the user's signup with the provided verification code
     await user.confirmSignup(verificationCode);
-
-    // Authenticate the user after successful confirmation
     const tokens = await user.authenticate();
 
-    // Serialize the cookie with the token
     const serializedCookie = cookie.serialize("token", tokens.idToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Set secure flag in production
+      secure: process.env.NODE_ENV === "production",
       path: "/",
-      maxAge: 30 * 24 * 60 * 60, // Set cookie to expire after 30 days
+      maxAge: 30 * 24 * 60 * 60, // 30 days
     });
 
-    // Set the 'Set-Cookie' header in the response
     res.setHeader("Set-Cookie", serializedCookie);
-
-    // Send a JSON response with the success message and tokens
     res.status(200).json({
       success: true,
       message: "Signup confirmed and user logged in",
       tokens,
     });
   } catch (error) {
-    // If an error occurs, send a JSON response with the error message
     res.status(400).json({
       success: false,
       message: "Failed to confirm signup",
