@@ -38,15 +38,12 @@ export const confirmSignup = async (req, res) => {
     await user.confirmSignup(verificationCode);
     const tokens = await user.authenticate();
 
-    // Set the cookies in the response object
+    // Set the JWT token as a cookie in the response
     const response = {
       statusCode: 200,
       headers: {
         "Set-Cookie": [
           `token=${tokens.idToken}; HttpOnly; Max-Age=${
-            30 * 24 * 60 * 60
-          }; Secure; Path=/`,
-          `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${
             30 * 24 * 60 * 60
           }; Secure; Path=/`,
         ],
@@ -60,6 +57,7 @@ export const confirmSignup = async (req, res) => {
 
     return response;
   } catch (error) {
+    console.log(error);
     const response = {
       statusCode: 400,
       body: JSON.stringify({
@@ -80,15 +78,12 @@ export const login = async (req, res) => {
   try {
     const tokens = await user.authenticate();
 
-    // Set the cookies in the response object
+    // Set the JWT token as a cookie in the response
     const response = {
       statusCode: 200,
       headers: {
         "Set-Cookie": [
           `token=${tokens.idToken}; HttpOnly; Max-Age=${
-            30 * 24 * 60 * 60
-          }; Secure; Path=/`,
-          `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${
             30 * 24 * 60 * 60
           }; Secure; Path=/`,
         ],
@@ -182,14 +177,11 @@ export const logout = async (req, res) => {
   try {
     user.logout();
 
-    // Clear the cookies in the response object
+    // Clear the JWT token cookie in the response
     const response = {
       statusCode: 200,
       headers: {
-        "Set-Cookie": [
-          `token=; HttpOnly; Max-Age=0; Secure; Path=/`,
-          `refreshToken=; HttpOnly; Max-Age=0; Secure; Path=/`,
-        ],
+        "Set-Cookie": [`token=; HttpOnly; Max-Age=0; Secure; Path=/`],
       },
       body: JSON.stringify({
         success: true,
