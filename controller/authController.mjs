@@ -6,29 +6,18 @@ export const signup = async (req, res) => {
 
   try {
     const cognitoUser = await user.signup();
-    const response = {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: true,
-        message: "User signed up successfully",
-        user: cognitoUser,
-      }),
-    };
-
-    return response;
+    res.status(200).json({
+      success: true,
+      message: "User signed up successfully",
+      user: cognitoUser,
+    });
   } catch (error) {
-    const response = {
-      statusCode: 400,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: false,
-        message: "Signup failed",
-        error: error.message,
-      }),
-    };
-
-    return response;
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: "Signup failed",
+      error: error.message,
+    });
   }
 };
 
@@ -40,34 +29,27 @@ export const confirmSignup = async (req, res) => {
     await user.confirmSignup(verificationCode);
     const tokens = await user.authenticate();
 
-    const response = {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Set-Cookie": `token=${tokens.idToken}; HttpOnly; Max-Age=${
-          30 * 24 * 60 * 60
-        }; Secure; Path=/`,
-      },
-      body: JSON.stringify({
+    // Set the JWT token as a cookie in the response
+    res
+      .status(200)
+      .cookie("token", tokens.idToken, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        secure: true,
+        path: "/",
+      })
+      .json({
         success: true,
         message: "Signup confirmed and user logged in",
         tokens,
-      }),
-    };
-
-    return response;
+      });
   } catch (error) {
-    const response = {
-      statusCode: 400,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: false,
-        message: "Failed to confirm signup",
-        error: error.message,
-      }),
-    };
-
-    return response;
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: "Failed to confirm signup",
+      error: error.message,
+    });
   }
 };
 
@@ -78,96 +60,69 @@ export const login = async (req, res) => {
   try {
     const tokens = await user.authenticate();
 
-    const response = {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Set-Cookie": `token=${tokens.idToken}; HttpOnly; Max-Age=${
-          30 * 24 * 60 * 60
-        }; Secure; Path=/`,
-      },
-      body: JSON.stringify({
+    // Set the JWT token as a cookie in the response
+    res
+      .status(200)
+      .cookie("token", tokens.idToken, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        secure: true,
+        path: "/",
+      })
+      .json({
         success: true,
         message: "Authentication successful",
         tokens,
-      }),
-    };
-
-    return response;
+      });
   } catch (error) {
-    const response = {
-      statusCode: 401,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: false,
-        message: "Authentication failed",
-        error: error.message,
-      }),
-    };
-
-    return response;
+    console.error(error);
+    res.status(401).json({
+      success: false,
+      message: "Authentication failed",
+      error: error.message,
+    });
   }
 };
+
 export const changePassword = async (req, res) => {
   const { email, oldPassword, newPassword } = req.body;
   const user = new User(email, oldPassword);
 
   try {
     const result = await user.changePassword(oldPassword, newPassword);
-    const response = {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: true,
-        message: "Password changed successfully",
-        result,
-      }),
-    };
-
-    return response;
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+      result,
+    });
   } catch (error) {
-    const response = {
-      statusCode: 400,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: false,
-        message: "Failed to change password",
-        error: error.message,
-      }),
-    };
-
-    return response;
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: "Failed to change password",
+      error: error.message,
+    });
   }
 };
+
 export const updateEmail = async (req, res) => {
   const { email, newEmail, password } = req.body;
   const user = new User(email, password);
 
   try {
     const result = await user.updateEmail(newEmail);
-    const response = {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: true,
-        message: "Email updated successfully",
-        result,
-      }),
-    };
-
-    return response;
+    res.status(200).json({
+      success: true,
+      message: "Email updated successfully",
+      result,
+    });
   } catch (error) {
-    const response = {
-      statusCode: 400,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: false,
-        message: "Failed to update email",
-        error: error.message,
-      }),
-    };
-
-    return response;
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: "Failed to update email",
+      error: error.message,
+    });
   }
 };
 
@@ -178,30 +133,17 @@ export const logout = async (req, res) => {
   try {
     user.logout();
 
-    const response = {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Set-Cookie": "token=; HttpOnly; Max-Age=0; Secure; Path=/",
-      },
-      body: JSON.stringify({
-        success: true,
-        message: "Logged out successfully",
-      }),
-    };
-
-    return response;
+    // Clear the JWT token cookie in the response
+    res.status(200).clearCookie("token").json({
+      success: true,
+      message: "Logged out successfully",
+    });
   } catch (error) {
-    const response = {
-      statusCode: 400,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        success: false,
-        message: "Failed to log out",
-        error: error.message,
-      }),
-    };
-
-    return response;
+    console.error(error);
+    res.status(400).json({
+      success: false,
+      message: "Failed to log out",
+      error: error.message,
+    });
   }
 };
