@@ -3,15 +3,14 @@ import User from "../model/authModel.mjs";
 
 // Helper function to generate a standard API Gateway response
 const generateResponse = (statusCode, message, data = {}, cookies = []) => ({
-  isBase64Encoded: false,
-  statusCode: statusCode,
+  statusCode,
   headers: {
     "Content-Type": "application/json",
     ...(cookies.length > 0 && { "Set-Cookie": cookies }),
   },
   body: JSON.stringify({
     success: statusCode >= 200 && statusCode < 300,
-    message: message,
+    message,
     ...data,
   }),
 });
@@ -22,11 +21,23 @@ export const signup = async (event) => {
 
   try {
     const cognitoUser = await user.signup();
-    return generateResponse(200, "User signed up successfully", {
-      user: cognitoUser,
-    });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        success: true,
+        message: "User signed up successfully",
+        user: cognitoUser,
+      }),
+    };
   } catch (error) {
-    return generateResponse(400, "Signup failed", { error: error.message });
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Signup failed",
+        error: error.message,
+      }),
+    };
   }
 };
 
@@ -78,11 +89,23 @@ export const changePassword = async (event) => {
 
   try {
     const result = await user.changePassword(oldPassword, newPassword);
-    return generateResponse(200, "Password changed successfully", { result });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        success: true,
+        message: "Password changed successfully",
+        result,
+      }),
+    };
   } catch (error) {
-    return generateResponse(400, "Failed to change password", {
-      error: error.message,
-    });
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to change password",
+        error: error.message,
+      }),
+    };
   }
 };
 
@@ -92,11 +115,23 @@ export const updateEmail = async (event) => {
 
   try {
     const result = await user.updateEmail(newEmail);
-    return generateResponse(200, "Email updated successfully", { result });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        success: true,
+        message: "Email updated successfully",
+        result,
+      }),
+    };
   } catch (error) {
-    return generateResponse(400, "Failed to update email", {
-      error: error.message,
-    });
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to update email",
+        error: error.message,
+      }),
+    };
   }
 };
 
@@ -107,8 +142,25 @@ export const logout = async (event) => {
   try {
     user.logout();
     const cookie = "token=; HttpOnly; Max-Age=0; Secure; Path=/";
-    return generateResponse(200, "Logged out successfully", {}, [cookie]);
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Set-Cookie": cookie,
+      },
+      body: JSON.stringify({
+        success: true,
+        message: "Logged out successfully",
+      }),
+    };
   } catch (error) {
-    return generateResponse(400, "Failed to log out", { error: error.message });
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to log out",
+        error: error.message,
+      }),
+    };
   }
 };
