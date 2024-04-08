@@ -1,4 +1,3 @@
-// authController.js
 import User from "../model/authModel.mjs";
 
 export const signup = async (req, res) => {
@@ -7,15 +6,27 @@ export const signup = async (req, res) => {
 
   try {
     const cognitoUser = await user.signup();
-    res.json({
-      success: true,
-      message: "User signed up successfully",
-      user: cognitoUser,
-    });
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify({
+        success: true,
+        message: "User signed up successfully",
+        user: cognitoUser,
+      }),
+    };
+
+    return response;
   } catch (error) {
-    res
-      .status(400)
-      .json({ success: false, message: "Signup failed", error: error.message });
+    const response = {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Signup failed",
+        error: error.message,
+      }),
+    };
+
+    return response;
   }
 };
 
@@ -27,31 +38,41 @@ export const confirmSignup = async (req, res) => {
     await user.confirmSignup(verificationCode);
     const tokens = await user.authenticate();
 
-    // Set the cookie using res.setHeader()
-    res.setHeader("Set-Cookie", [
-      `token=${tokens.idToken}; HttpOnly; Max-Age=${
-        30 * 24 * 60 * 60
-      }; Secure; Path=/`,
-      `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${
-        30 * 24 * 60 * 60
-      }; Secure; Path=/`,
-    ]);
+    // Set the cookies in the response object
+    const response = {
+      statusCode: 200,
+      headers: {
+        "Set-Cookie": [
+          `token=${tokens.idToken}; HttpOnly; Max-Age=${
+            30 * 24 * 60 * 60
+          }; Secure; Path=/`,
+          `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${
+            30 * 24 * 60 * 60
+          }; Secure; Path=/`,
+        ],
+      },
+      body: JSON.stringify({
+        success: true,
+        message: "Signup confirmed and user logged in",
+        tokens,
+      }),
+    };
 
-    // Send the success response
-    res.status(200).json({
-      success: true,
-      message: "Signup confirmed and user logged in",
-      tokens,
-    });
+    return response;
   } catch (error) {
-    // Send the error response
-    res.status(400).json({
-      success: false,
-      message: "Failed to confirm signup",
-      error: error.message,
-    });
+    const response = {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to confirm signup",
+        error: error.message,
+      }),
+    };
+
+    return response;
   }
 };
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = new User(email, password);
@@ -100,17 +121,27 @@ export const changePassword = async (req, res) => {
 
   try {
     const result = await user.changePassword(oldPassword, newPassword);
-    res.json({
-      success: true,
-      message: "Password changed successfully",
-      result,
-    });
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify({
+        success: true,
+        message: "Password changed successfully",
+        result,
+      }),
+    };
+
+    return response;
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to change password",
-      error: error.message,
-    });
+    const response = {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to change password",
+        error: error.message,
+      }),
+    };
+
+    return response;
   }
 };
 
@@ -120,13 +151,27 @@ export const updateEmail = async (req, res) => {
 
   try {
     const result = await user.updateEmail(newEmail);
-    res.json({ success: true, message: "Email updated successfully", result });
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify({
+        success: true,
+        message: "Email updated successfully",
+        result,
+      }),
+    };
+
+    return response;
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to update email",
-      error: error.message,
-    });
+    const response = {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to update email",
+        error: error.message,
+      }),
+    };
+
+    return response;
   }
 };
 
@@ -137,18 +182,32 @@ export const logout = async (req, res) => {
   try {
     user.logout();
 
-    // Clear the cookies using res.setHeader()
-    res.setHeader("Set-Cookie", [
-      `token=; HttpOnly; Max-Age=0; Secure; Path=/`,
-      `refreshToken=; HttpOnly; Max-Age=0; Secure; Path=/`,
-    ]);
+    // Clear the cookies in the response object
+    const response = {
+      statusCode: 200,
+      headers: {
+        "Set-Cookie": [
+          `token=; HttpOnly; Max-Age=0; Secure; Path=/`,
+          `refreshToken=; HttpOnly; Max-Age=0; Secure; Path=/`,
+        ],
+      },
+      body: JSON.stringify({
+        success: true,
+        message: "Logged out successfully",
+      }),
+    };
 
-    res.json({ success: true, message: "Logged out successfully" });
+    return response;
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to log out",
-      error: error.message,
-    });
+    const response = {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to log out",
+        error: error.message,
+      }),
+    };
+
+    return response;
   }
 };
