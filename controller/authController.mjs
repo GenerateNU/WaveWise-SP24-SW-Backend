@@ -52,7 +52,6 @@ export const confirmSignup = async (req, res) => {
     });
   }
 };
-
 export const login = async (req, res) => {
   const { email, password } = req.body;
   const user = new User(email, password);
@@ -60,23 +59,38 @@ export const login = async (req, res) => {
   try {
     const tokens = await user.authenticate();
 
-    // Set the cookies using res.setHeader()
-    res.setHeader("Set-Cookie", [
-      `token=${tokens.idToken}; HttpOnly; Max-Age=${
-        30 * 24 * 60 * 60
-      }; Secure; Path=/`,
-      `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${
-        30 * 24 * 60 * 60
-      }; Secure; Path=/`,
-    ]);
+    // Set the cookies in the response object
+    const response = {
+      statusCode: 200,
+      headers: {
+        "Set-Cookie": [
+          `token=${tokens.idToken}; HttpOnly; Max-Age=${
+            30 * 24 * 60 * 60
+          }; Secure; Path=/`,
+          `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${
+            30 * 24 * 60 * 60
+          }; Secure; Path=/`,
+        ],
+      },
+      body: JSON.stringify({
+        success: true,
+        message: "Authentication successful",
+        tokens,
+      }),
+    };
 
-    res.json({ success: true, message: "Authentication successful" });
+    return response;
   } catch (error) {
-    res.status(401).json({
-      success: false,
-      message: "Authentication failed",
-      error: error.message,
-    });
+    const response = {
+      statusCode: 401,
+      body: JSON.stringify({
+        success: false,
+        message: "Authentication failed",
+        error: error.message,
+      }),
+    };
+
+    return response;
   }
 };
 
