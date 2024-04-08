@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
       .json({ success: false, message: "Signup failed", error: error.message });
   }
 };
-// Your route handler
+
 export const confirmSignup = async (req, res) => {
   const { email, verificationCode, password } = req.body;
   const user = new User(email, password);
@@ -27,13 +27,15 @@ export const confirmSignup = async (req, res) => {
     await user.confirmSignup(verificationCode);
     const tokens = await user.authenticate();
 
-    // Set the cookie using res.cookie()
-    res.cookie("token", tokens.idToken, {
-      httpOnly: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-    });
+    // Set the cookie using res.setHeader()
+    res.setHeader("Set-Cookie", [
+      `token=${tokens.idToken}; HttpOnly; Max-Age=${
+        30 * 24 * 60 * 60
+      }; Secure; Path=/`,
+      `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${
+        30 * 24 * 60 * 60
+      }; Secure; Path=/`,
+    ]);
 
     // Send the success response
     res.status(200).json({
@@ -57,16 +59,17 @@ export const login = async (req, res) => {
 
   try {
     const tokens = await user.authenticate();
-    // Set the session token as a cookie
-    res.setHeader(
-      "Set-Cookie",
-      cookie.serialize("token", tokens.idToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 30 * 24 * 60 * 60, // 30 days
-      })
-    );
+
+    // Set the cookies using res.setHeader()
+    res.setHeader("Set-Cookie", [
+      `token=${tokens.idToken}; HttpOnly; Max-Age=${
+        30 * 24 * 60 * 60
+      }; Secure; Path=/`,
+      `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${
+        30 * 24 * 60 * 60
+      }; Secure; Path=/`,
+    ]);
+
     res.json({ success: true, message: "Authentication successful" });
   } catch (error) {
     res.status(401).json({
@@ -119,7 +122,13 @@ export const logout = async (req, res) => {
 
   try {
     user.logout();
-    res.clearCookie("token", { path: "/" });
+
+    // Clear the cookies using res.setHeader()
+    res.setHeader("Set-Cookie", [
+      `token=; HttpOnly; Max-Age=0; Secure; Path=/`,
+      `refreshToken=; HttpOnly; Max-Age=0; Secure; Path=/`,
+    ]);
+
     res.json({ success: true, message: "Logged out successfully" });
   } catch (error) {
     res.status(400).json({
