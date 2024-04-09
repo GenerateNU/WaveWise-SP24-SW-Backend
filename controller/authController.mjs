@@ -30,28 +30,33 @@ export const confirmSignup = async (req, res) => {
     const tokens = await user.authenticate();
 
     // Set the JWT token as a cookie in the response
-    res
-      .status(200)
-      .cookie("token", tokens.idToken, {
-        httpOnly: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        secure: true,
-        path: "/",
-      })
-      .set("Access-Control-Allow-Credentials", true)
-      .set("Access-Control-Allow-Origin", req.headers.origin)
-      .json({
+    const response = {
+      statusCode: 200,
+      headers: {
+        "Set-Cookie": `token=${tokens.idToken}; HttpOnly; Max-Age=${
+          30 * 24 * 60 * 60
+        }; Secure; Path=/`,
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": req.headers.origin,
+      },
+      body: JSON.stringify({
         success: true,
         message: "Signup confirmed and user logged in",
         tokens,
-      });
+      }),
+    };
+    return response;
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      success: false,
-      message: "Failed to confirm signup",
-      error: error.message,
-    });
+    const response = {
+      statusCode: 400,
+      body: JSON.stringify({
+        success: false,
+        message: "Failed to confirm signup",
+        error: error.message,
+      }),
+    };
+    return response;
   }
 };
 
