@@ -38,6 +38,8 @@ export const confirmSignup = async (req, res) => {
         secure: true,
         path: "/",
       })
+      .set("Access-Control-Allow-Credentials", true)
+      .set("Access-Control-Allow-Origin", req.headers.origin)
       .json({
         success: true,
         message: "Signup confirmed and user logged in",
