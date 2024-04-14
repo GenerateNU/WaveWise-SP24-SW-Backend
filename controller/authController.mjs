@@ -20,9 +20,8 @@ export const signup = async (req, res) => {
     });
   }
 };
-
-export const confirmSignup = async (req, res) => {
-  const { email, verificationCode, password } = req.body;
+export const confirmSignup = async (event) => {
+  const { email, verificationCode, password } = JSON.parse(event.body);
   const user = new User(email, password);
 
   try {
@@ -37,7 +36,7 @@ export const confirmSignup = async (req, res) => {
           30 * 24 * 60 * 60
         }; Secure; Path=/`,
         "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": req.headers.origin,
+        "Access-Control-Allow-Origin": event.headers.origin,
       },
       body: JSON.stringify({
         success: true,
