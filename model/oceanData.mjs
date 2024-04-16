@@ -6,30 +6,36 @@ const tableName = "Ocean-Data";
 class OceanData {
   async save(data) {
     const { deviceId, sensorData } = data;
-    const timestamp = Date.now();
+    const timestamp = Date.now().toString(); // Convert timestamp to string
 
     // If deviceId is not provided, generate a new one
     const id = deviceId ? deviceId : uuidv4();
 
-    const params = {
-      TableName: tableName,
-      Item: {
-        DeviceID: id,
-        sensorData: [
-          {
-            pH: sensorData.pH,
-            Conductivity: sensorData.Conductivity,
-            Temperature: sensorData.Temperature,
-            WaterPressure: sensorData.WaterPressure,
-            AirPressure: sensorData.AirPressure,
-            UVLevels: sensorData.UVLevels,
-            timestamp: timestamp, // Store timestamp as string
-          },
-        ],
-      },
+    const newSensorData = {
+      pH: sensorData.pH,
+      Conductivity: sensorData.Conductivity,
+      Temperature: sensorData.Temperature,
+      WaterPressure: sensorData.WaterPressure,
+      AirPressure: sensorData.AirPressure,
+      UVLevels: sensorData.UVLevels,
+      timestamp: timestamp, // Store timestamp as string
     };
 
-    await dynamoDB.put(params).promise();
+    const params = {
+      TableName: tableName,
+      Key: {
+        DeviceID: id,
+      },
+      UpdateExpression:
+        "SET sensorData = list_append(if_not_exists(sensorData, :empty_list), :new_data)",
+      ExpressionAttributeValues: {
+        ":empty_list": [],
+        ":new_data": [newSensorData],
+      },
+      ReturnValues: "UPDATED_NEW",
+    };
+
+    await dynamoDB.update(params).promise();
     return { deviceId: id, timestamp };
   }
 
@@ -39,20 +45,20 @@ class OceanData {
     };
 
     const result = await dynamoDB.scan(params).promise();
-    return result.Items;
+    return result.Items.map((item) => unmarshall(item));
   }
 
   async getByDeviceId(deviceId) {
     const params = {
       TableName: tableName,
       KeyConditionExpression: "DeviceID = :device_id",
-      ExpressionAttributeValues: {
+      ExpressionAttributeValues: marshall({
         ":device_id": deviceId,
-      },
+      }),
     };
 
     const result = await dynamoDB.query(params).promise();
-    return result.Items;
+    return result.Items.map((item) => unmarshall(item));
   }
 }
 
