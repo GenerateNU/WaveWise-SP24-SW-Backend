@@ -6,12 +6,11 @@ const tableName = "OceanData";
 class OceanData {
   async save(data) {
     const { deviceId, sensorData } = data;
-    const timestamp = Date.now(); // Get the current timestamp
+    const timestamp = Date.now();
 
     // If deviceId is not provided, generate a new one
     const id = deviceId ? deviceId : uuidv4();
 
-    // Create the DynamoDB item
     const params = {
       TableName: tableName,
       Item: {
