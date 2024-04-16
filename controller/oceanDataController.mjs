@@ -4,13 +4,13 @@ const oceanDataModel = new OceanData();
 
 export const addOceanData = async (req, res) => {
   try {
-    const result = await oceanDataModel.save(req.body);
+    const { deviceId, sensorData } = req.body;
+    const result = await oceanDataModel.save({ deviceId, sensorData });
     res.json({ message: "Data saved successfully", result });
   } catch (error) {
-    const errorMessage = error.message;
     res
       .status(500)
-      .json({ message: "Failed to save data", error: errorMessage });
+      .json({ message: "Failed to save data", error: error.message });
   }
 };
 

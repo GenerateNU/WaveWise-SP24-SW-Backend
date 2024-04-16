@@ -5,35 +5,34 @@ const tableName = "OceanData";
 
 class OceanData {
   async save(data) {
-    const {
-      deviceId,
-      pH,
-      Conductivity,
-      Temperature,
-      WaterPressure,
-      AirPressure,
-      UVLevels,
-    } = data;
-    const timestamp = Date.now();
+    const { deviceId, sensorData } = data;
+    const timestamp = Date.now(); // Get the current timestamp
 
+    // If deviceId is not provided, generate a new one
     const id = deviceId ? deviceId : uuidv4();
 
+    // Create the DynamoDB item
     const params = {
       TableName: tableName,
       Item: {
         deviceId: id,
-        pH,
-        Conductivity,
-        Temperature,
-        WaterPressure,
-        AirPressure,
-        UVLevels,
-        timestamp,
+        sensorData: [
+          ...sensorData,
+          {
+            pH: sensorData.pH,
+            Conductivity: sensorData.Conductivity,
+            Temperature: sensorData.Temperature,
+            WaterPressure: sensorData.WaterPressure,
+            AirPressure: sensorData.AirPressure,
+            UVLevels: sensorData.UVLevels,
+            timestamp,
+          },
+        ],
       },
     };
 
     await dynamoDB.put(params).promise();
-    return { ...data, deviceId: id };
+    return { deviceId: id, sensorData: params.Item.sensorData };
   }
 
   async getAll() {
