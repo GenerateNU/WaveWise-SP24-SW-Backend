@@ -1,48 +1,46 @@
 import { dynamoDB } from "../aws-config.mjs";
+import { v4 as uuidv4 } from "uuid";
+
+const tableName = "OceanData";
 
 class OceanData {
-  constructor() {
-    this.tableName = "OceanData";
-  }
+  async save(data) {
+    const {
+      pH,
+      Conductivity,
+      Temperature,
+      WaterPressure,
+      AirPressure,
+      UVLevels,
+    } = data;
+    const deviceId = uuidv4();
+    const timestamp = Date.now();
 
-  async save(oceanData) {
     const params = {
-      TableName: this.tableName,
-      Item: oceanData,
+      TableName: tableName,
+      Item: {
+        deviceId,
+        pH,
+        Conductivity,
+        Temperature,
+        WaterPressure,
+        AirPressure,
+        UVLevels,
+        timestamp,
+      },
     };
-    return dynamoDB.put(params).promise();
+
+    await dynamoDB.put(params).promise();
+    return { ...data, deviceId };
   }
 
   async getAll() {
     const params = {
-      TableName: this.tableName,
-    };
-    return dynamoDB.scan(params).promise();
-  }
-
-  async getByDeviceID(deviceID, startTimestamp, endTimestamp) {
-    let keyConditionExpression = "#DeviceID = :deviceID";
-    const expressionAttributeValues = {
-      ":deviceID": deviceID,
+      TableName: tableName,
     };
 
-    if (startTimestamp && endTimestamp) {
-      keyConditionExpression += " AND #Timestamp BETWEEN :start AND :end";
-      expressionAttributeValues[":start"] = startTimestamp;
-      expressionAttributeValues[":end"] = endTimestamp;
-    }
-
-    const params = {
-      TableName: this.tableName,
-      KeyConditionExpression: keyConditionExpression,
-      ExpressionAttributeNames: {
-        "#DeviceID": "DeviceID",
-        "#Timestamp": "Timestamp",
-      },
-      ExpressionAttributeValues: expressionAttributeValues,
-    };
-
-    return dynamoDB.query(params).promise();
+    const result = await dynamoDB.scan(params).promise();
+    return result.Items;
   }
 }
 
