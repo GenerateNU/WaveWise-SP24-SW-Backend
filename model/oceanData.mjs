@@ -6,7 +6,7 @@ const tableName = "OceanData";
 class OceanData {
   async save(data) {
     const { deviceId, sensorData } = data;
-    const timestamp = Date.now();
+    const timestamp = Date.now().toString(); // Convert timestamp to string
 
     // If deviceId is not provided, generate a new one
     const id = deviceId ? deviceId : uuidv4();
@@ -24,7 +24,7 @@ class OceanData {
             WaterPressure: sensorData.WaterPressure,
             AirPressure: sensorData.AirPressure,
             UVLevels: sensorData.UVLevels,
-            timestamp,
+            timestamp: timestamp, // Store timestamp as string
           },
         ],
       },
