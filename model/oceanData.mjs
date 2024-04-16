@@ -1,12 +1,12 @@
 import { dynamoDB } from "../aws-config.mjs";
 import { v4 as uuidv4 } from "uuid";
 
-const tableName = "OceanData";
+const tableName = "Ocean-Data";
 
 class OceanData {
   async save(data) {
     const { deviceId, sensorData } = data;
-    const timestamp = Date.now().toString(); // Convert timestamp to string
+    const timestamp = Date.now();
 
     // If deviceId is not provided, generate a new one
     const id = deviceId ? deviceId : uuidv4();
@@ -15,7 +15,6 @@ class OceanData {
       TableName: tableName,
       Item: {
         DeviceID: id,
-        Timestamp: timestamp,
         sensorData: [
           {
             pH: sensorData.pH,
