@@ -14,24 +14,21 @@ class OceanData {
     const params = {
       TableName: tableName,
       Item: {
-        deviceId: id,
-        sensorData: [
-          ...sensorData,
-          {
-            pH: sensorData.pH,
-            Conductivity: sensorData.Conductivity,
-            Temperature: sensorData.Temperature,
-            WaterPressure: sensorData.WaterPressure,
-            AirPressure: sensorData.AirPressure,
-            UVLevels: sensorData.UVLevels,
-            timestamp,
-          },
-        ],
+        DeviceID: id,
+        Timestamp: timestamp,
+        sensorData: {
+          pH: sensorData.pH,
+          Conductivity: sensorData.Conductivity,
+          Temperature: sensorData.Temperature,
+          WaterPressure: sensorData.WaterPressure,
+          AirPressure: sensorData.AirPressure,
+          UVLevels: sensorData.UVLevels,
+        },
       },
     };
 
     await dynamoDB.put(params).promise();
-    return { deviceId: id, sensorData: params.Item.sensorData };
+    return { deviceId: id, timestamp };
   }
 
   async getAll() {

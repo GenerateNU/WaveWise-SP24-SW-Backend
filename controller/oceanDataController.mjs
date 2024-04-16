@@ -5,8 +5,15 @@ const oceanDataModel = new OceanData();
 export const addOceanData = async (req, res) => {
   try {
     const { deviceId, sensorData } = req.body;
-    const result = await oceanDataModel.save({ deviceId, sensorData });
-    res.json({ message: "Data saved successfully", result });
+    const { deviceId: savedDeviceId, timestamp } = await oceanDataModel.save({
+      deviceId,
+      sensorData,
+    });
+    res.json({
+      message: "Data saved successfully",
+      deviceId: savedDeviceId,
+      timestamp,
+    });
   } catch (error) {
     res
       .status(500)
