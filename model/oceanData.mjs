@@ -6,6 +6,7 @@ const tableName = "OceanData";
 class OceanData {
   async save(data) {
     const {
+      deviceId,
       pH,
       Conductivity,
       Temperature,
@@ -13,13 +14,14 @@ class OceanData {
       AirPressure,
       UVLevels,
     } = data;
-    const deviceId = uuidv4();
     const timestamp = Date.now();
+
+    const id = deviceId ? deviceId : uuidv4();
 
     const params = {
       TableName: tableName,
       Item: {
-        deviceId,
+        deviceId: id,
         pH,
         Conductivity,
         Temperature,
@@ -31,7 +33,7 @@ class OceanData {
     };
 
     await dynamoDB.put(params).promise();
-    return { ...data, deviceId };
+    return { ...data, deviceId: id };
   }
 
   async getAll() {
