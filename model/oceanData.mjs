@@ -16,14 +16,17 @@ class OceanData {
       Item: {
         DeviceID: id,
         Timestamp: timestamp,
-        sensorData: {
-          pH: sensorData.pH,
-          Conductivity: sensorData.Conductivity,
-          Temperature: sensorData.Temperature,
-          WaterPressure: sensorData.WaterPressure,
-          AirPressure: sensorData.AirPressure,
-          UVLevels: sensorData.UVLevels,
-        },
+        sensorData: [
+          {
+            pH: sensorData.pH,
+            Conductivity: sensorData.Conductivity,
+            Temperature: sensorData.Temperature,
+            WaterPressure: sensorData.WaterPressure,
+            AirPressure: sensorData.AirPressure,
+            UVLevels: sensorData.UVLevels,
+            timestamp,
+          },
+        ],
       },
     };
 
@@ -37,6 +40,19 @@ class OceanData {
     };
 
     const result = await dynamoDB.scan(params).promise();
+    return result.Items;
+  }
+
+  async getByDeviceId(deviceId) {
+    const params = {
+      TableName: tableName,
+      KeyConditionExpression: "DeviceID = :device_id",
+      ExpressionAttributeValues: {
+        ":device_id": deviceId,
+      },
+    };
+
+    const result = await dynamoDB.query(params).promise();
     return result.Items;
   }
 }

@@ -31,3 +31,15 @@ export const getOceanData = async (req, res) => {
       .json({ message: "Failed to retrieve data", error: error.message });
   }
 };
+
+export const getOceanDataByDeviceId = async (req, res) => {
+  try {
+    const { deviceId } = req.params;
+    const data = await oceanDataModel.getByDeviceId(deviceId);
+    res.json({ message: "Data retrieved successfully", data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to retrieve data", error: error.message });
+  }
+};
