@@ -45,20 +45,20 @@ class OceanData {
     };
 
     const result = await dynamoDB.scan(params).promise();
-    return result.Items.map((item) => unmarshall(item));
+    return result.Items;
   }
 
   async getByDeviceId(deviceId) {
     const params = {
       TableName: tableName,
       KeyConditionExpression: "DeviceID = :device_id",
-      ExpressionAttributeValues: marshall({
+      ExpressionAttributeValues: {
         ":device_id": deviceId,
-      }),
+      },
     };
 
     const result = await dynamoDB.query(params).promise();
-    return result.Items.map((item) => unmarshall(item));
+    return result.Items;
   }
 }
 
