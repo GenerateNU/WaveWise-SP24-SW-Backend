@@ -17,40 +17,32 @@ export const signup = async (req, res) => {
       .json({ success: false, message: "Signup failed", error: error.message });
   }
 };
-
-export const confirmSignup = async (event, context) => {
-  const { email, verificationCode, password } = JSON.parse(event.body);
+export const confirmSignup = async (req, res) => {
+  const { email, verificationCode, password } = req.body;
   const user = new User(email, password);
 
   try {
     await user.confirmSignup(verificationCode);
     const tokens = await user.authenticate();
 
-    return {
-      statusCode: 200,
-      headers: {
-        "Set-Cookie": `token=${tokens.idToken}; HttpOnly; Max-Age=${
-          30 * 24 * 60 * 60
-        }; Secure; Path=/`,
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": event.headers.origin,
-      },
-      body: JSON.stringify({
-        success: true,
-        message: "Signup confirmed and user logged in",
-        tokens,
-      }),
-    };
+    const serializedCookie = cookie.serialize("token", tokens.idToken, {
+      httpOnly: true,
+      path: "/",
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+    });
+
+    res.setHeader("Set-Cookie", serializedCookie);
+    res.status(200).json({
+      success: true,
+      message: "Signup confirmed and user logged in",
+      tokens,
+    });
   } catch (error) {
-    console.error(error);
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        success: false,
-        message: "Failed to confirm signup",
-        error: error.message,
-      }),
-    };
+    res.status(400).json({
+      success: false,
+      message: "Failed to confirm signup",
+      error: error.message,
+    });
   }
 };
 
