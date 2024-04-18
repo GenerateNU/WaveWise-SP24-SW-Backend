@@ -1,10 +1,9 @@
 import User from "../model/authModel.mjs";
 
 export const signup = async (event, context) => {
-  const { email, password } = JSON.parse(event.body);
-  const user = new User(email, password);
-
   try {
+    const { email, password } = JSON.parse(event.body);
+    const user = new User(email, password);
     const cognitoUser = await user.signup();
     return {
       statusCode: 200,
@@ -15,12 +14,12 @@ export const signup = async (event, context) => {
       }),
     };
   } catch (error) {
-    console.error(error);
+    console.error("Signup error:", error);
     return {
-      statusCode: 400,
+      statusCode: 500,
       body: JSON.stringify({
         success: false,
-        message: "Signup failed",
+        message: "Internal server error",
         error: error.message,
       }),
     };
