@@ -1,28 +1,20 @@
 import User from "../model/authModel.mjs";
 
-export const signup = async (event, context) => {
+export const signup = async (req, res) => {
+  const { email, password } = req.body;
+  const user = new User(email, password);
+
   try {
-    const { email, password } = JSON.parse(event.body);
-    const user = new User(email, password);
     const cognitoUser = await user.signup();
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        success: true,
-        message: "User signed up successfully",
-        user: cognitoUser,
-      }),
-    };
+    res.json({
+      success: true,
+      message: "User signed up successfully",
+      user: cognitoUser,
+    });
   } catch (error) {
-    console.error("Signup error:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        success: false,
-        message: "Internal server error",
-        error: error.message,
-      }),
-    };
+    res
+      .status(400)
+      .json({ success: false, message: "Signup failed", error: error.message });
   }
 };
 
